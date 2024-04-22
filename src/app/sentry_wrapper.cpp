@@ -1,5 +1,5 @@
 // Aseprite
-// Copyright (C) 2021-2023  Igara Studio S.A.
+// Copyright (C) 2021-2024  Igara Studio S.A.
 //
 // This program is distributed under the terms of
 // the End-User License Agreement for Aseprite.
@@ -96,6 +96,11 @@ bool Sentry::areThereCrashesToReport()
 {
   if (m_dbdir.empty())
     return false;
+
+  // As we don't use sentry_clear_crashed_last_run(), this will
+  // return 1 if the last run (or any previous run) has crashed.
+  if (sentry_get_crashed_last_run() == 1)
+    return true;
 
   // If the last_crash file exists, we can say that there are
   // something to report (this file is created on Windows and Linux).
